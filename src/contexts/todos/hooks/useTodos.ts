@@ -20,10 +20,18 @@ export function useTodos() {
   } = useQuery({
     queryKey: ["todos"],
     queryFn: async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) throw new Error("Usuário não autenticado.");
+
       const { data, error } = await supabase
         .from("todos")
         .select("*")
+        .eq("user_id", user.id)
         .order("created_at", { ascending: false });
+
       if (error) throw new Error(error.message);
       return data as Todo[];
     },
