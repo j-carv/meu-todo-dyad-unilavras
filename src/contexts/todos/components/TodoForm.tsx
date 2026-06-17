@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -56,12 +55,7 @@ export function TodoForm() {
             </FormItem>
           )}
         />
-        <Button
-          type="submit"
-          disabled={createTodo.isPending}
-          className="rounded-xl bg-gradient-to-br from-primary to-accent shadow-md shadow-primary/20 hover:opacity-90"
-        >
-          <Plus className="h-4 w-4 mr-1" />
+        <Button type="submit" disabled={createTodo.isPending}>
           {createTodo.isPending ? "..." : "Adicionar"}
         </Button>
       </form>
