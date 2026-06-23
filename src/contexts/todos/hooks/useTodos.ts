@@ -82,6 +82,24 @@ export function useTodos() {
     onError: (err) => toast.error("Erro ao atualizar: " + err.message),
   });
 
+  const updateTodo = useMutation({
+    mutationFn: async ({ id, title }: { id: string; title: string }) => {
+      const { data, error } = await supabase
+        .from("todos")
+        .update({ title })
+        .eq("id", id)
+        .select()
+        .single();
+      if (error) throw new Error(error.message);
+      return data as Todo;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      toast.success("Tarefa atualizada!");
+    },
+    onError: (err) => toast.error("Erro ao editar: " + err.message),
+  });
+
   const deleteTodo = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("todos").delete().eq("id", id);
@@ -101,6 +119,7 @@ export function useTodos() {
     error,
     createTodo,
     toggleTodo,
+    updateTodo,
     deleteTodo,
   };
 }
